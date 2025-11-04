@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.kououdev.crudroom.entity.User
 
 class UserAdapter(
-    private var userList: List<User>
+    private val users: MutableList<User>,
+    private val onItemLongClick: (User) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvName: TextView = itemView.findViewById(R.id.tvName)
-        val tvEmail: TextView = itemView.findViewById(R.id.tvEmail)
+    class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val txtName: TextView = view.findViewById(R.id.txtName)
+        val txtEmail: TextView = view.findViewById(R.id.txtEmail)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -23,16 +24,22 @@ class UserAdapter(
         return UserViewHolder(view)
     }
 
-    override fun getItemCount(): Int = userList.size
+    override fun getItemCount() = users.size
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val user = userList[position]
-        holder.tvName.text = user.name
-        holder.tvEmail.text = user.email
+        val user = users[position]
+        holder.txtName.text = user.name
+        holder.txtEmail.text = user.email
+
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(user)
+            true
+        }
     }
 
-    fun updateData(newList: List<User>) {
-        userList = newList
+    fun updateData(newUsers: List<User>) {
+        users.clear()
+        users.addAll(newUsers)
         notifyDataSetChanged()
     }
 }

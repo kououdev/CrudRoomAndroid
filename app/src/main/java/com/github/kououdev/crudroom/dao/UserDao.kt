@@ -5,15 +5,15 @@ import com.github.kououdev.crudroom.entity.User
 
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(user: User)
+    @Query("SELECT * FROM users ORDER BY id DESC")
+    fun getAll(): List<User>
+
+    @Insert
+    fun insert(user: User)
 
     @Update
-    suspend fun update(user: User)
+    fun update(user: User)
 
     @Delete
-    suspend fun delete(user: User)
-
-    @Query("SELECT * FROM users")
-    suspend fun getAll(): List<User>
+    fun delete(user: User)
 }
